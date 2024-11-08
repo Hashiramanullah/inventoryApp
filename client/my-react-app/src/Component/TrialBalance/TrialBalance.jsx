@@ -1,5 +1,5 @@
 import React from 'react';
-import './TrialBalance.css';
+import './trialBalance.css';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 const TrialBalance = () => {

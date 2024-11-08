@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import './Preview.css'; // Importing the CSS file
+import './preview.css'; // Importing the CSS file
 import jsPDF from 'jspdf';
 
 const Preview = () => {
