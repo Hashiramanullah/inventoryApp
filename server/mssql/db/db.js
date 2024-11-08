@@ -10,7 +10,7 @@
 //     encrypt: true,
 //     trustServerCertificate: true,
 //     connectionTimeout: 30000, // Set a higher connection timeout
-//   },
+//   }, 
 // };
 
 // const poolPromise = new sql.ConnectionPool(dbConfig)
