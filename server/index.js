@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const user = require('./models/user');
+const user = require('./models/user'); // Assuming the user model is defined
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -57,14 +57,15 @@ app.post('/register', async (req, res) => {
 // Login User Route
 app.post('/login', async (req, res) => {
   const { number, password } = req.body;
+  console.log(number, password, 'fff');
   
   function normalizePhoneNumber(number) {
     return number.replace(/\D/g, ''); // Remove non-digit characters
   }
 
   function isAdminPhoneNumber(number) {
-    const adminNumber = '923271431584'; // Admin number
-    return adminNumber.includes(number);
+    const adminNumber = '23456789'; // Admin number (You can customize this as needed)
+    return number === adminNumber;
   }
 
   const normalizedNumber = normalizePhoneNumber(number);
@@ -79,10 +80,10 @@ app.post('/login', async (req, res) => {
     const isMatch = await bcrypt.compare(password, findUser.password);
 
     if (isMatch) {
-      const token = jwt.sign({ number: findUser.number }, process.env.JWT_SECRET || 'shhh', { expiresIn: '1h' });
+      const token = jwt.sign({ number: findUser.number, name: findUser.name }, process.env.JWT_SECRET || 'shhh', { expiresIn: '1h' });
       res.cookie('token', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production', // Secure flag for production
+        secure: process.env.NODE_ENV === 'production', // Set secure flag in production
         sameSite: 'Lax',
       });
 
@@ -114,7 +115,7 @@ const isAdmin = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'shhh');
     const findUser = await user.findOne({ number: decoded.number });
 
-    if (!findUser || findUser.name !== 'admin') {
+    if (!findUser || !isAdminPhoneNumber(findUser.number)) {
       return res.status(403).json({ success: false, message: 'Access denied' });
     }
 

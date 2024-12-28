@@ -16,7 +16,7 @@ mongoose.connect(process.env.MONGODB_URL, {
 
 const userScehma = mongoose.Schema({
     name:String,
-    number: { type: Number, unique: true },
+    number: { type: String, unique: true },
     password:String,
     posts:[
         { type:mongoose.Schema.Types.ObjectId, ref:'post' }
