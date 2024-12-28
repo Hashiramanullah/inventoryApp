@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './login.css';
 
@@ -38,24 +38,16 @@ export const Login = () => {
         setShowSuggestions(false);  // Hide suggestions after selection
     };
 
-    // const handleLogout = () => {
-    //     // Clear the stored numbers array and reset suggestions
-    //     localStorage.removeItem('numbers');
-    //     setNumber('');
-    //     setSuggestions([]);  // Clear suggestions on logout
-    // };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8989/login', {
+            const response = await axios.post('http://localhost:9099/login', {
                 number,
                 password
             }, {
                 withCredentials: true  // Important to include cookies in cross-origin requests
             });
-                // console.log(response.data.number);
-                
+
             if (response.data.success) {
                 localStorage.setItem('token', response.data.token);
 
@@ -68,10 +60,13 @@ export const Login = () => {
                     localStorage.setItem('numbers', JSON.stringify(savedNumbers));  // Save updated list
                 }
 
-                console.log(response.data);
+                console.log(response.data,'ddd');
 
                 // Update suggestions based on the logged-in user
                 setSuggestions(savedNumbers);
+
+                // Save user type (admin or user) in localStorage
+                localStorage.setItem('userType', response.data.userType);
 
                 if (response.data.userType === 'admin') {
                     window.location.href = '/admin';  // Redirect to admin page
@@ -88,77 +83,47 @@ export const Login = () => {
     };
 
     return (
-        <>
-            <div className="loginBody">
-                <h1>Login</h1>
-                <form onSubmit={handleSubmit}>
-                    <div className="row">
-                        <label htmlFor="phoneNum">Phone Number</label>
-                        <input
-                            type="text"  // Changed to text to handle '+'
-                            name="number"
-                            value={number}
-                            onChange={handleNumberChange}
-                            placeholder="Number"
-                            onFocus={() => setShowSuggestions(true)}  // Show dropdown on focus
-                        />
-                        
-                         {suggestions.length > 0 && showSuggestions && (
-                            <select
-                                size={suggestions.length}  // Number of visible options in the dropdown
-                                onChange={handleNumberSelect}  // Capture selection
-                                onBlur={() => setShowSuggestions(false)}  // Hide dropdown on blur
-                                style={{ display: 'block' }}  // Ensure dropdown is visible
-                                value={number}  // Bind the selected number to input value
-                            >
-                                 {suggestions.map((suggestion) => (
-                                        <option key={suggestion} value={suggestion}>
-                                            {suggestion}
-                                        </option>
-                                    ))
-                                }
-
-                            
-                                    
-                                    
-                                
-                            </select>
-                        )} 
-                        
-                        {/* {suggestions.length > 0 && showSuggestions && (
-                            <select
-                                size={suggestions.length}  // Number of visible options in the dropdown
-                                onChange={handleNumberSelect}  // Capture selection
-                                onBlur={() => setShowSuggestions(false)}  // Hide dropdown on blur
-                                style={{ display: 'block' }}  // Ensure dropdown is visible
-                                value={number}  // Bind the selected number to input value
-                            >
-                                {suggestions
-                                    .filter((suggestion) => typeof suggestion === 'string' && suggestion.startsWith(number))  // Ensure suggestion is a string
-                                    .map((suggestion) => (
-                                        <option key={suggestion} value={suggestion}>
-                                            {suggestion}
-                                        </option>
-                                    ))
-                                }
-                            </select>
-                        )} */}
-                    </div>
-                    <div className="row">
-                        <label htmlFor="password">Password</label>
-                        <input
-                            type="password"
-                            name="password"
-                            placeholder="Enter Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                    </div>
-                    <button type="submit">Login</button>
-                    {/* <button type="button" onClick={handleLogout}>Logout</button> */}
-                     {/* Logout button */}
-                </form>
-            </div>
-        </>
+        <div className="loginBody">
+            <h1>Login</h1>
+            <form onSubmit={handleSubmit}>
+                <div className="row">
+                    <label htmlFor="phoneNum">Phone Number</label>
+                    <input
+                        type="text"
+                        name="number"
+                        value={number}
+                        onChange={handleNumberChange}
+                        placeholder="Number"
+                        onFocus={() => setShowSuggestions(true)}  // Show dropdown on focus
+                    />
+                    {suggestions.length > 0 && showSuggestions && (
+                        <select
+                            size={suggestions.length}  // Number of visible options in the dropdown
+                            onChange={handleNumberSelect}  // Capture selection
+                            onBlur={() => setShowSuggestions(false)}  // Hide dropdown on blur
+                            style={{ display: 'block' }}  // Ensure dropdown is visible
+                            value={number}  // Bind the selected number to input value
+                        >
+                            {suggestions.map((suggestion) => (
+                                <option key={suggestion} value={suggestion}>
+                                    {suggestion}
+                                </option>
+                            ))}
+                        </select>
+                    )}
+                </div>
+                <div className="row">
+                    <label htmlFor="password">Password</label>
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Enter Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                </div>
+                <button type="submit">Login</button>
+            </form>
+        </div>
     );
 };

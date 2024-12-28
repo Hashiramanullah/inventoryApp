@@ -11,7 +11,7 @@ export const Register = () => {
     e.preventDefault();
     
     try {
-      const response = await axios.post('http://localhost:8989/register', { password, name, number });
+      const response = await axios.post('http://localhost:9099/register', { password, name, number });
       console.log(response);
 
       if (response.data.success) {
