@@ -14,7 +14,7 @@ app.set('view engine', 'ejs');
 app.use(cors({
   origin: 'http://localhost:5173', // Your frontend URL
   credentials: true
-}));
+}));  
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
@@ -166,6 +166,6 @@ app.post('/logout', (req, res) => {
 
 // Start the server
 const PORT = process.env.PORT || 8989;
-app.listen(PORT, () => {
+app.listen(PORT,`0.0.0.0`,() => {
   console.log(`Server is running on port ${PORT}`);
 });

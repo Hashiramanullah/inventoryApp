@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './Component/Navbar/Navbar';
 import { Login } from './Component/Login/Login';
@@ -40,7 +40,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/profile" element={ isUser ?  <Profile /> : <Navigate to="/login"/>} />
+        <Route path="/profile" element={ isUser  || isAdmin ?  <Profile /> : <Navigate to="/login"/>} />
         <Route path="/admin" element={isAdmin ? <Admin /> : <Navigate to="/login" />} />
         <Route path="/profile/trial-balance" element={<TrialBalance />} />
         <Route path="/profile/cash-voucher" element={<CashVoucher />} />
